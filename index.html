@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>StudyNest for Teachers — Oklahoma Educator Hub</title>
+<meta name="description" content="StudyNest for Teachers: Oklahoma educator dashboard — classroom management, lesson planning, assessment tools, parent communication, and more.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233d0080'/%3E%3Crect x='10' y='14' width='44' height='28' rx='3' fill='%23a78bfa' opacity='0.3'/%3E%3Crect x='14' y='18' width='36' height='20' rx='2' fill='%231e0060'/%3E%3Ccircle cx='32' cy='28' r='7' fill='none' stroke='%23c4b5fd' stroke-width='2'/%3E%3Cpath d='M29 28 L31 30 L36 25' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Crect x='20' y='42' width='24' height='4' rx='2' fill='%23a78bfa' opacity='0.5'/%3E%3Ccircle cx='32' cy='50' r='3' fill='%23a78bfa'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════ */
+:root {
+  --nav-h: 60px;
+  --sidebar-w: 240px;
+  --ink: #1a0a3a;
+  --ink2: #4a3a6a;
+  --muted: #8b7aab;
+  --bg: #f3f0ff;
+  --bg2: #e8e2ff;
+  --white: #ffffff;
+  --border: rgba(139,92,246,0.15);
+  --border2: rgba(109,40,217,0.2);
+
+  --purple: #7c3aed;
+  --purple-dk: #5b21b6;
+  --purple-lt: #ede9fe;
+  --violet: #8b5cf6;
+  --violet-lt: #f5f3ff;
+
+  --emerald: #10b981;
+  --emerald-dk: #059669;
+  --emerald-lt: #d1fae5;
+
+  --amber: #f59e0b;
+  --rose: #f43f5e;
+  --sky: #0ea5e9;
+  --indigo: #6366f1;
+
+  --nav-bg: #1e0060;
+  --sidebar-bg: #f8f5ff;
+
+  --r: 16px;
+  --r-lg: 22px;
+  --sh: 0 2px 8px rgba(109,40,217,0.08), 0 1px 2px rgba(109,40,217,0.05);
+  --sh-md: 0 8px 24px rgba(109,40,217,0.14);
+  --sh-lg: 0 16px 48px rgba(109,40,217,0.18);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { height:100%; overflow:hidden; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  display:flex; flex-direction:column;
+  height:100vh; width:100vw;
+  overflow:hidden; position:fixed;
+  top:0; left:0;
+  font-size:14.5px; line-height:1.5;
+}
+
+/* ═══════════════════════════════════
+   LOADER
+═══════════════════════════════════ */
+#t-loader {
+  position:fixed; inset:0; z-index:9999;
+  background: linear-gradient(160deg, #1e0060 0%, #3d0080 50%, #1a005a 100%);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:0;
+  transition: opacity 0.7s ease, visibility 0.7s;
+}
+#t-loader.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+
+.tl-blob {
+  position:absolute; border-radius:50%; pointer-events:none;
+  animation: tlBlobFloat ease-in-out infinite alternate;
+}
+.tl-blob-1 { width:350px;height:350px;background:rgba(139,92,246,0.12);top:-100px;left:-100px;animation-duration:7s; }
+.tl-blob-2 { width:280px;height:280px;background:rgba(16,185,129,0.08);bottom:-80px;right:-80px;animation-duration:9s;animation-delay:-4s; }
+@keyframes tlBlobFloat { from{transform:translate(0,0)} to{transform:translate(24px,36px)} }
+
+.tl-logo {
+  width:100px;height:100px;border-radius:28px;
+  background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(109,40,217,0.1));
+  border:2px solid rgba(167,139,250,0.4);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:28px;
+  animation: tlLogoDrop 0.8s cubic-bezier(0.34,1.5,0.64,1) both;
+  box-shadow:0 16px 48px rgba(0,0,0,0.3);
+}
+@keyframes tlLogoDrop {
+  from{opacity:0;transform:translateY(-60px)scale(0.7);}
+  to{opacity:1;transform:translateY(0)scale(1);}
+}
+.tl-logo svg { width:60px;height:60px; }
+
+.tl-title {
+  font-family:'Syne',sans-serif;
+  font-size:2.6rem;font-weight:800;color:#fff;
+  letter-spacing:-0.5px;margin-bottom:4px;
+  animation:tlFadeUp 0.5s 0.5s ease both;
+}
+.tl-title em{font-style:normal;color:#c4b5fd;}
+.tl-sub {
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.75rem;color:rgba(255,255,255,0.4);
+  letter-spacing:3px;text-transform:uppercase;font-weight:600;
+  margin-bottom:36px;
+  animation:tlFadeUp 0.5s 0.65s ease both;
+}
+@keyframes tlFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.tl-bar-wrap{width:260px;animation:tlFadeUp 0.4s 0.7s ease both;}
+.tl-bar-track{width:100%;height:5px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;}
+.tl-bar-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#10b981,#a78bfa);background-size:200% 100%;border-radius:100px;animation:tlProgress 2.2s cubic-bezier(0.4,0,0.2,1) forwards,tlBarShim 1.5s linear infinite;}
+@keyframes tlBarShim{0%{background-position:100% 0}100%{background-position:-100% 0}}
+@keyframes tlProgress{0%{width:0%}30%{width:38%}65%{width:74%}90%{width:92%}100%{width:100%}}
+
+.tl-status{margin-top:14px;font-size:0.62rem;color:rgba(255,255,255,0.22);letter-spacing:1px;text-align:center;font-weight:600;animation:tlFadeUp 0.4s 0.8s ease both;}
+
+/* ═══════════════════════════════════
+   TOP NAV
+═══════════════════════════════════ */
+.topnav {
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:var(--nav-h);
+  background:linear-gradient(135deg,#1e0060 0%,#2d0070 60%,#1a0055 100%);
+  border-bottom:1px solid rgba(167,139,250,0.18);
+  display:flex;align-items:center;
+  padding:0 18px;gap:14px;
+  box-shadow:0 2px 24px rgba(0,0,0,0.45),0 1px 0 rgba(167,139,250,0.1);
+}
+
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-logo-mark{
+  width:36px;height:36px;
+  background:rgba(167,139,250,0.15);
+  border:1.5px solid rgba(167,139,250,0.4);
+  border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+}
+.nav-logo-mark svg{width:22px;height:22px;}
+.nav-brand-name{
+  font-family:'Syne',sans-serif;
+  font-size:1.2rem;font-weight:800;color:#fff;letter-spacing:-0.3px;line-height:1;
+}
+.nav-brand-name em{font-style:normal;color:#c4b5fd;}
+.nav-brand-sub{
+  font-size:0.52rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(196,181,253,0.55);display:block;line-height:1;margin-top:1px;
+}
+
+.nav-spacer{flex:1;}
+
+/* Search */
+.search-wrap{position:relative;width:230px;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:13px;height:13px;pointer-events:none;}
+.search-input-el{
+  width:100%;background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  padding:7px 12px 7px 32px;
+  color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.82rem;
+  outline:none;transition:all 0.2s;
+}
+.search-input-el::placeholder{color:rgba(255,255,255,0.3);}
+.search-input-el:focus{background:rgba(255,255,255,0.14);border-color:rgba(167,139,250,0.5);box-shadow:0 0 0 3px rgba(167,139,250,0.12);}
+
+.nav-badge{
+  background:rgba(196,181,253,0.15);border:1px solid rgba(196,181,253,0.25);
+  border-radius:8px;padding:5px 12px;
+  font-size:0.6rem;font-weight:800;letter-spacing:2px;color:#c4b5fd;
+  text-transform:uppercase;white-space:nowrap;flex-shrink:0;
+}
+
+/* Dark toggle */
+.dark-toggle{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);
+  border-radius:20px;width:52px;height:26px;cursor:pointer;
+  display:flex;align-items:center;padding:3px;transition:all 0.25s;flex-shrink:0;
+}
+.dark-toggle-thumb{
+  width:20px;height:20px;border-radius:50%;background:#c4b5fd;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.25s cubic-bezier(0.34,1.6,0.64,1);font-size:11px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.25);
+}
+.dark-toggle-thumb::after{content:'☀️';}
+body.dark-mode .dark-toggle{background:rgba(167,139,250,0.15);border-color:rgba(167,139,250,0.3);}
+body.dark-mode .dark-toggle-thumb{transform:translateX(26px);}
+body.dark-mode .dark-toggle-thumb::after{content:'🌙';}
+
+.hamburger{display:none;background:none;border:none;cursor:pointer;color:#fff;padding:4px;}
+.hamburger svg{width:20px;height:20px;}
+
+.student-link{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);
+  border-radius:10px;padding:6px 12px;
+  font-size:0.72rem;font-weight:700;color:#6ee7b7;
+  text-decoration:none;white-space:nowrap;flex-shrink:0;
+  transition:all 0.18s;
+}
+.student-link:hover{background:rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.4);color:#a7f3d0;transform:translateY(-1px);}
+
+/* Bug button */
+.bug-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(244,63,94,0.1);border:1.5px solid rgba(244,63,94,0.28);
+  border-radius:9px;padding:6px 12px;
+  font-size:0.73rem;font-weight:700;color:#fda4af;
+  cursor:pointer;transition:all 0.18s;white-space:nowrap;flex-shrink:0;
+}
+.bug-btn svg{width:13px;height:13px;flex-shrink:0;}
+.bug-btn:hover{background:rgba(244,63,94,0.2);border-color:rgba(244,63,94,0.5);color:#fff;transform:translateY(-1px);}
+
+/* ═══════════════════════════════════
+   LAYOUT
+═══════════════════════════════════ */
+.layout{display:flex;flex:1;min-height:0;margin-top:var(--nav-h);width:100%;}
+
+/* ═══════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════ */
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--sidebar-bg);
+  border-right:1px solid rgba(139,92,246,0.12);
+  padding:14px 0 40px;
+  position:fixed;top:var(--nav-h);left:0;
+  height:calc(100vh - var(--nav-h));
+  overflow-y:auto;overflow-x:hidden;
+  z-index:100;transition:transform 0.22s ease;
+}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.2);border-radius:4px;}
+
+.sidebar-section-label{
+  font-size:0.55rem;font-weight:900;text-transform:uppercase;
+  letter-spacing:2.5px;color:var(--muted);
+  padding:16px 16px 6px;
+}
+
+.sidebar-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px;
+  color:var(--ink2);font-size:0.83rem;font-weight:700;
+  cursor:pointer;text-decoration:none;
+  border-left:3px solid transparent;
+  border-radius:0 14px 14px 0;
+  margin:1px 8px 1px 0;
+  transition:all 0.14s;line-height:1.4;
+}
+.sidebar-item:hover,.sidebar-item.active{
+  background:linear-gradient(90deg,rgba(139,92,246,0.12),rgba(109,40,217,0.04));
+  border-left-color:#7c3aed;color:#5b21b6;
+}
+.si-icon{width:16px;height:16px;flex-shrink:0;opacity:0.65;}
+.sidebar-item:hover .si-icon,.sidebar-item.active .si-icon{opacity:1;}
+
+.sidebar-overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(30,0,96,0.45);backdrop-filter:blur(3px);}
+.sidebar-overlay.open{display:block;}
+
+/* ═══════════════════════════════════
+   CONTENT
+═══════════════════════════════════ */
+.content{
+  flex:1;margin-left:var(--sidebar-w);
+  padding:22px 26px 80px;
+  overflow-y:auto;width:calc(100% - var(--sidebar-w));
+  background:var(--bg);
+}
+.content::-webkit-scrollbar{width:5px;}
+.content::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.25);border-radius:10px;}
+.content::-webkit-scrollbar-thumb:hover{background:rgba(139,92,246,0.45);}
+
+/* ═══════════════════════════════════
+   HERO BANNER
+═══════════════════════════════════ */
+.welcome-hero{
+  background:linear-gradient(135deg,#1e0060 0%,#3d0080 55%,#2d1080 100%);
+  border-radius:22px;padding:28px 30px;margin-bottom:20px;
+  display:flex;align-items:center;gap:22px;
+  box-shadow:0 12px 40px rgba(30,0,96,0.35),0 0 0 1px rgba(167,139,250,0.15) inset;
+  position:relative;overflow:hidden;
+}
+.welcome-hero::before{
+  content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;
+  background:radial-gradient(circle,rgba(167,139,250,0.14) 0%,transparent 70%);pointer-events:none;
+}
+.welcome-hero::after{
+  content:'';position:absolute;bottom:-50px;left:20%;width:240px;height:240px;
+  background:radial-gradient(circle,rgba(16,185,129,0.08) 0%,transparent 70%);pointer-events:none;
+}
+
+.hero-icon{
+  width:72px;height:72px;flex-shrink:0;
+  background:rgba(167,139,250,0.12);border:2px solid rgba(167,139,250,0.3);
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+}
+.hero-icon svg{width:46px;height:46px;}
+
+.hero-text{flex:1;position:relative;z-index:1;}
+.hero-eyebrow{
+  font-size:0.58rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(196,181,253,0.7);margin-bottom:5px;
+  display:flex;align-items:center;gap:6px;
+}
+.hero-eyebrow::before{content:'';width:16px;height:1.5px;background:#a78bfa;border-radius:2px;}
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:1.7rem;color:#fff;letter-spacing:-0.3px;margin-bottom:6px;line-height:1.15;
+}
+.hero-title em{font-style:normal;color:#c4b5fd;}
+.hero-sub{color:rgba(255,255,255,0.45);font-size:0.8rem;line-height:1.65;max-width:500px;}
+
+.hero-cta{flex-shrink:0;position:relative;z-index:1;}
+.hero-enter-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#7c3aed,#10b981);
+  color:#fff;border:none;border-radius:14px;padding:12px 22px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;font-weight:800;
+  cursor:pointer;transition:all 0.2s;text-decoration:none;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(124,58,237,0.4);
+}
+.hero-enter-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 24px rgba(124,58,237,0.5);}
+.hero-enter-btn svg{width:16px;height:16px;transition:transform 0.2s;}
+.hero-enter-btn:hover svg{transform:translateX(4px);}
+
+/* ═══════════════════════════════════
+   STATS ROW
+═══════════════════════════════════ */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  margin-bottom:20px;
+}
+.stat-card{
+  background:#fff;border:1px solid var(--border);border-radius:16px;
+  padding:16px 18px;display:flex;align-items:center;gap:14px;
+  box-shadow:var(--sh);transition:all 0.2s;cursor:default;
+}
+.stat-card:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
+.stat-icon{
+  width:42px;height:42px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.stat-icon svg{width:22px;height:22px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);line-height:1;}
+.stat-label{font-size:0.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
+
+/* ═══════════════════════════════════
+   CATEGORY SECTION
+═══════════════════════════════════ */
+.cat-section{margin-bottom:20px;}
+.cat-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.cat-head h2{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  color:var(--ink);white-space:nowrap;display:flex;align-items:center;gap:8px;
+  letter-spacing:-0.2px;
+}
+.cat-icon{width:18px;height:18px;flex-shrink:0;}
+.cat-line{flex:1;height:1.5px;background:linear-gradient(90deg,rgba(139,92,246,0.3),rgba(16,185,129,0.15),transparent);border-radius:2px;}
+.cat-count{
+  font-size:0.58rem;font-weight:900;color:#5b21b6;
+  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+  border:1px solid rgba(124,58,237,0.2);
+  padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+
+/* ═══════════════════════════════════
+   TOOL CARDS — main layout (not tiles)
+═══════════════════════════════════ */
+.tool-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:11px;
+}
+
+.tool-card{
+  background:#fff;border:1px solid var(--border);border-radius:16px;
+  display:flex;align-items:center;gap:12px;padding:13px 14px;
+  text-decoration:none;color:var(--ink);
+  box-shadow:var(--sh);
+  transition:all 0.2s cubic-bezier(0.34,1.3,0.64,1);
+  position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.tool-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(139,92,246,0.03),rgba(16,185,129,0.03));
+  opacity:0;transition:opacity 0.2s;
+}
+.tool-card:hover{
+  box-shadow:0 8px 24px rgba(109,40,217,0.14),0 2px 8px rgba(109,40,217,0.08);
+  transform:translateY(-3px);border-color:rgba(139,92,246,0.28);
+}
+.tool-card:hover::before{opacity:1;}
+
+.tool-card-icon{
+  width:46px;height:46px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(15,23,42,0.1),0 0 0 1px rgba(0,0,0,0.05);
+  overflow:hidden;
+}
+.tool-card-icon img{width:68%;height:68%;object-fit:contain;border-radius:4px;image-rendering:-webkit-optimize-contrast;display:block;}
+.tool-card-icon .fallback-letter{
+  font-size:1.2rem;font-weight:900;color:#fff;font-family:'Syne',sans-serif;
+}
+
+.tool-card-body{flex:1;min-width:0;}
+.tool-card-name{font-size:0.82rem;font-weight:800;color:var(--ink);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-card-desc{font-size:0.66rem;color:var(--muted);font-weight:600;margin-top:2px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.tool-card-arrow{
+  flex-shrink:0;opacity:0;transition:opacity 0.18s,transform 0.18s;
+  color:var(--purple);
+}
+.tool-card:hover .tool-card-arrow{opacity:1;transform:translateX(3px);}
+.tool-card-arrow svg{width:14px;height:14px;}
+
+/* Heart button for cards */
+.card-heart{
+  position:absolute;top:8px;right:8px;
+  background:rgba(255,255,255,0.9);border:none;border-radius:50%;
+  width:22px;height:22px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;opacity:0;transition:all 0.15s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.12);
+}
+.card-heart svg{width:11px;height:11px;fill:rgba(0,0,0,0.2);stroke:none;transition:fill 0.15s;}
+.tool-card:hover .card-heart{opacity:1;}
+.card-heart.hearted{opacity:1;background:#fff0f3;}
+.card-heart.hearted svg{fill:#f43f5e;}
+.card-heart:hover{transform:scale(1.18);}
+
+/* ═══════════════════════════════════
+   FAVORITES SECTION (card row)
+═══════════════════════════════════ */
+#fav-section{
+  background:linear-gradient(135deg,#fff9f0,#fff5e4);
+  border:1.5px solid rgba(245,158,11,0.25);
+  border-radius:20px;padding:18px 20px 20px;
+  margin-bottom:20px;
+}
+#fav-section .cat-head h2{color:#92400e;}
+#fav-section .cat-count{background:linear-gradient(135deg,#fef9c3,#fde68a);border-color:rgba(245,158,11,0.3);color:#92400e;}
+#fav-section .cat-line{background:linear-gradient(90deg,rgba(245,158,11,0.4),transparent);}
+.fav-empty{font-size:0.8rem;color:var(--muted);font-weight:600;}
+
+/* ═══════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════ */
+.scroll-reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s cubic-bezier(0.22,1,0.36,1),transform 0.5s cubic-bezier(0.22,1,0.36,1);}
+.scroll-reveal.revealed{opacity:1;transform:none;}
+.scroll-reveal-delay-1{transition-delay:0.05s;}
+.scroll-reveal-delay-2{transition-delay:0.1s;}
+
+/* ═══════════════════════════════════
+   FEATURED / PINNED STRIP
+═══════════════════════════════════ */
+.featured-strip{
+  display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;
+  scrollbar-width:none;margin-bottom:20px;
+}
+.featured-strip::-webkit-scrollbar{display:none;}
+.feat-card{
+  flex-shrink:0;width:200px;
+  background:linear-gradient(135deg,#1e0060,#3d0080);
+  border:1px solid rgba(167,139,250,0.22);
+  border-radius:18px;padding:18px 18px 16px;
+  display:flex;flex-direction:column;gap:10px;
+  box-shadow:0 6px 20px rgba(30,0,96,0.25);
+  text-decoration:none;color:#fff;
+  transition:all 0.22s cubic-bezier(0.34,1.3,0.64,1);
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.feat-card::before{
+  content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;
+  border-radius:50%;background:rgba(196,181,253,0.1);pointer-events:none;
+}
+.feat-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 32px rgba(30,0,96,0.38);}
+.feat-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.feat-icon img{width:72%;height:72%;object-fit:contain;border-radius:3px;image-rendering:-webkit-optimize-contrast;}
+.feat-icon .fallback-letter{font-size:1.1rem;font-weight:900;}
+.feat-name{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:800;color:#fff;line-height:1.2;}
+.feat-desc{font-size:0.65rem;color:rgba(255,255,255,0.45);font-weight:600;line-height:1.4;}
+.feat-arrow{align-self:flex-start;margin-top:auto;font-size:0.65rem;font-weight:800;color:rgba(196,181,253,0.6);letter-spacing:1px;text-transform:uppercase;}
+
+/* ═══════════════════════════════════
+   QUICK ACCESS CHIPS
+═══════════════════════════════════ */
+.quick-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.quick-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 13px;background:#fff;border:1px solid var(--border);
+  border-radius:10px;font-size:0.75rem;font-weight:700;
+  color:var(--ink2);text-decoration:none;cursor:pointer;
+  transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:var(--sh);
+}
+.quick-chip:hover{background:var(--purple-lt);border-color:rgba(139,92,246,0.4);color:#5b21b6;transform:translateY(-2px);}
+.quick-chip img{width:16px;height:16px;border-radius:3px;object-fit:contain;}
+
+/* ═══════════════════════════════════
+   SCHOOL PORTAL MODAL
+═══════════════════════════════════ */
+.ps-overlay{display:none;position:fixed;inset:0;z-index:700;background:rgba(5,0,20,0.75);backdrop-filter:blur(12px);align-items:center;justify-content:center;}
+.ps-overlay.open{display:flex;}
+.ps-modal{background:#fff;border-radius:24px;padding:28px 28px 10px;width:100%;max-width:480px;max-height:85vh;box-shadow:var(--sh-lg);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.4s cubic-bezier(0.34,1.6,0.64,1);}
+.ps-modal-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-shrink:0;}
+.ps-modal-logo{width:38px;height:38px;background:#7c3aed;border-radius:11px;display:flex;align-items:center;justify-content:center;}
+.ps-modal-logo svg{width:22px;height:22px;}
+.ps-modal-head h2{font-family:'Plus Jakarta Sans',sans-serif;color:#0f172a;font-size:1.05rem;font-weight:800;}
+.ps-modal-head p{color:#64748b;font-size:0.76rem;}
+.ps-close{margin-left:auto;background:none;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;transition:color 0.15s;}
+.ps-close:hover{color:#475569;}
+.ps-school-list{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:6px;padding-bottom:20px;}
+.ps-school-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#0f172a;transition:all 0.15s;}
+.ps-school-btn:hover{background:#f3f0ff;border-color:#c4b5fd;transform:translateY(-1px);}
+.ps-school-name{font-size:0.82rem;font-weight:700;color:#0f172a;}
+.ps-school-desc{font-size:0.7rem;color:#64748b;}
+.ps-school-notice{cursor:default;background:#f8fafc;border-color:#f1f5f9;}
+.ps-school-notice:hover{transform:none;background:#f8fafc;border-color:#f1f5f9;}
+
+/* ═══════════════════════════════════
+   BUG REPORT MODAL
+═══════════════════════════════════ */
+.bug-overlay{display:none;position:fixed;inset:0;z-index:800;background:rgba(5,0,20,0.82);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:16px;}
+.bug-overlay.open{display:flex;}
+.bug-modal{background:#0f172a;border:1px solid rgba(244,63,94,0.25);border-radius:22px;width:100%;max-width:720px;height:96vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.6);animation:modalIn 0.4s cubic-bezier(0.34,1.6,0.64,1);overflow:hidden;}
+.bug-modal-head{display:flex;align-items:center;gap:12px;padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
+.bug-modal-icon{width:40px;height:40px;background:rgba(244,63,94,0.15);border:1.5px solid rgba(244,63,94,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bug-modal-icon svg{width:20px;height:20px;}
+.bug-modal-title{color:#fff;font-size:1rem;font-weight:800;}
+.bug-modal-sub{color:rgba(255,255,255,0.4);font-size:0.72rem;margin-top:2px;}
+.bug-modal-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.3);font-size:1.3rem;cursor:pointer;transition:color 0.15s;line-height:1;padding:4px 8px;}
+.bug-modal-close:hover{color:rgba(255,255,255,0.75);}
+.bug-modal-body{flex:1;overflow-y:auto;display:flex;align-items:stretch;min-height:0;}
+.bug-modal-body iframe{width:100%;border:none;flex:1;min-height:900px;background:#fff;border-radius:0 0 22px 22px;}
+
+@keyframes modalIn{from{opacity:0;transform:scale(0.6)translateY(30px)rotate(-3deg)}60%{transform:scale(1.05)translateY(-6px)rotate(1deg)}80%{transform:scale(0.97)translateY(2px)rotate(-0.5deg)}to{opacity:1;transform:scale(1)translateY(0)rotate(0)}}
+
+/* ═══════════════════════════════════
+   KEYBOARD SHORTCUTS
+═══════════════════════════════════ */
+.shortcuts-overlay{display:none;position:fixed;inset:0;z-index:700;background:rgba(5,0,20,0.75);backdrop-filter:blur(12px);align-items:center;justify-content:center;}
+.shortcuts-overlay.open{display:flex;}
+.shortcuts-modal{background:#0f172a;border:1px solid rgba(167,139,250,0.15);border-radius:22px;padding:28px 34px;width:100%;max-width:440px;box-shadow:var(--sh-lg);animation:modalIn 0.4s cubic-bezier(0.34,1.6,0.64,1);position:relative;}
+.shortcuts-modal h3{font-family:'Syne',sans-serif;color:#fff;font-size:1rem;font-weight:800;margin-bottom:4px;}
+.shortcuts-modal .sc-sub{color:rgba(255,255,255,0.4);font-size:0.74rem;margin-bottom:20px;}
+.sc-close{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:1.2rem;cursor:pointer;transition:color 0.15s;}
+.sc-close:hover{color:rgba(255,255,255,0.7);}
+.sc-list{display:flex;flex-direction:column;gap:8px;}
+.sc-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:9px;}
+.sc-desc{color:rgba(255,255,255,0.7);font-size:0.8rem;}
+.sc-keys{display:flex;gap:4px;align-items:center;}
+.sc-key{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);border-radius:5px;padding:2px 8px;font-size:0.68rem;font-family:monospace;color:#c4b5fd;}
+.sc-plus{color:rgba(255,255,255,0.3);font-size:0.7rem;}
+
+/* ═══════════════════════════════════
+   SCROLL TOP
+═══════════════════════════════════ */
+.scroll-top{
+  position:fixed;bottom:22px;right:22px;z-index:150;
+  width:40px;height:40px;
+  background:linear-gradient(135deg,#1e0060,#3d0080);border:1px solid rgba(167,139,250,0.3);
+  border-radius:12px;cursor:pointer;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:all 0.2s;pointer-events:none;
+  box-shadow:0 4px 16px rgba(30,0,96,0.3);
+}
+.scroll-top.visible{opacity:1;pointer-events:all;}
+.scroll-top:hover{transform:translateY(-2px);}
+.scroll-top svg{width:16px;height:16px;}
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+.site-footer{
+  margin-top:32px;padding:20px 0 4px;
+  border-top:1px solid rgba(139,92,246,0.12);
+  text-align:center;font-size:0.68rem;color:var(--muted);font-weight:600;
+}
+.site-footer a{color:var(--muted);text-decoration:none;opacity:0.7;}
+.site-footer a:hover{opacity:1;color:var(--purple);}
+
+/* ═══════════════════════════════════
+   COOKIE BANNER
+═══════════════════════════════════ */
+.cookie-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:800;
+  background:linear-gradient(135deg,#1e0060 0%,#3d0080 100%);
+  border-top:1px solid rgba(167,139,250,0.25);
+  box-shadow:0 -16px 60px rgba(0,0,0,0.45);
+  padding:18px 24px;
+  transform:translateY(100%);transition:transform 0.55s cubic-bezier(0.34,1.1,0.64,1);
+  backdrop-filter:blur(24px);
+}
+.cookie-bar.visible{transform:translateY(0);}
+.cookie-bar.hiding{transform:translateY(115%);transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);}
+.cookie-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.cookie-left{display:flex;align-items:center;gap:14px;flex:1;min-width:0;}
+.cookie-icon{font-size:1.5rem;flex-shrink:0;width:48px;height:48px;border-radius:14px;background:rgba(167,139,250,0.12);border:1.5px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;}
+.cookie-text{flex:1;}
+.cookie-title{font-size:0.88rem;font-weight:800;color:#fff;margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.cookie-desc{font-size:0.72rem;color:rgba(255,255,255,0.45);line-height:1.5;}
+.cookie-actions{display:flex;gap:8px;flex-shrink:0;align-items:center;}
+.cookie-btn{padding:10px 22px;border-radius:11px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;transition:all 0.18s;white-space:nowrap;}
+.cookie-reject{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);}
+.cookie-reject:hover{background:rgba(255,255,255,0.11);color:rgba(255,255,255,0.85);}
+.cookie-accept{background:linear-gradient(135deg,#7c3aed,#10b981);color:#fff;}
+.cookie-accept:hover{transform:translateY(-2px);}
+
+/* ═══════════════════════════════════
+   DARK MODE
+═══════════════════════════════════ */
+body.dark-mode{
+  --ink:#d4ccf0;--ink2:#9a8bc0;--muted:#6a5a8a;
+  --bg:#08041a;--bg2:#10082a;--white:#12083a;
+  --border:rgba(139,92,246,0.12);--border2:rgba(109,40,217,0.18);
+  --sidebar-bg:#0c0620;
+}
+body.dark-mode .sidebar{background:linear-gradient(180deg,#0c0620 0%,#080418 100%);border-right-color:rgba(139,92,246,0.12);}
+body.dark-mode .content{background:var(--bg);}
+body.dark-mode .tool-card{background:#100830;border-color:rgba(139,92,246,0.12);}
+body.dark-mode .tool-card-name{color:#d4ccf0;}
+body.dark-mode .tool-card-desc{color:#6a5a8a;}
+body.dark-mode .stat-card{background:#100830;border-color:rgba(139,92,246,0.12);}
+body.dark-mode .stat-val{color:#d4ccf0;}
+body.dark-mode .ps-modal{background:#080418;}
+body.dark-mode .ps-modal-head h2{color:#d4ccf0;}
+body.dark-mode .ps-school-btn{background:#100830;border-color:rgba(139,92,246,0.15);color:#d4ccf0;}
+body.dark-mode .quick-chip{background:#100830;border-color:rgba(139,92,246,0.15);color:#9a8bc0;}
+body.dark-mode .quick-chip:hover{background:rgba(139,92,246,0.1);color:#c4b5fd;}
+body.dark-mode .sidebar-item{color:#6a5a8a;}
+body.dark-mode .sidebar-item:hover,.sidebar-item.active{background:rgba(139,92,246,0.08);color:#c4b5fd;}
+body.dark-mode .cat-head h2{color:#d4ccf0;}
+body.dark-mode #fav-section{background:linear-gradient(135deg,#1a110a,#160d05);border-color:rgba(245,158,11,0.15);}
+body.dark-mode .search-input-el{background:#100830;border-color:rgba(139,92,246,0.2);color:#d4ccf0;}
+
+/* ═══════════════════════════════════
+   MOBILE BOTTOM NAV
+═══════════════════════════════════ */
+.mobile-bottom-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:linear-gradient(135deg,#1e0060 0%,#3d0080 100%);
+  border-top:1px solid rgba(167,139,250,0.22);
+  box-shadow:0 -4px 24px rgba(30,0,96,0.4);
+  height:64px;padding:0 4px;
+  align-items:center;justify-content:space-around;
+}
+body.dark-mode .mobile-bottom-nav{background:linear-gradient(135deg,#0c0220 0%,#1a0840 100%);}
+
+.mbn-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;flex:1;padding:6px 2px;cursor:pointer;text-decoration:none;
+  color:rgba(255,255,255,0.38);transition:all 0.15s;
+  border-radius:10px;-webkit-tap-highlight-color:transparent;position:relative;
+}
+.mbn-item.active,.mbn-item:active{color:#c4b5fd;}
+.mbn-item svg{width:21px;height:21px;flex-shrink:0;}
+.mbn-label{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.52rem;font-weight:800;letter-spacing:0.3px;white-space:nowrap;}
+.mbn-dot{width:4px;height:4px;border-radius:50%;background:#a78bfa;opacity:0;transition:opacity 0.15s;position:absolute;top:4px;}
+.mbn-item.active .mbn-dot{opacity:1;}
+
+/* ═══════════════════════════════════
+   MOBILE RESPONSIVE
+═══════════════════════════════════ */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .content{margin-left:0;width:100%;}
+  .hamburger{display:block;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .mobile-bottom-nav{display:flex;}
+  .content{padding-bottom:80px !important;}
+  .scroll-top{bottom:76px;}
+  .student-link .sl-text{display:none;}
+  .nav-badge{display:none;}
+}
+
+@media(max-width:600px){
+  .welcome-hero{flex-direction:column;text-align:center;padding:20px 16px;}
+  .hero-icon{display:none;}
+  .hero-eyebrow{justify-content:center;}
+  .hero-eyebrow::before{display:none;}
+  .hero-title{font-size:1.4rem;}
+  .hero-sub{font-size:0.76rem;}
+  .hero-cta{align-self:center;}
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .stat-card{padding:12px 14px;gap:10px;}
+  .stat-icon{width:36px;height:36px;border-radius:10px;}
+  .stat-val{font-size:1.2rem;}
+  .tool-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:9px;}
+  .tool-card{padding:11px 12px;gap:10px;}
+  .tool-card-icon{width:40px;height:40px;border-radius:11px;}
+  .tool-card-name{font-size:0.78rem;}
+  .tool-card-desc{font-size:0.62rem;}
+  .feat-card{width:170px;padding:14px 14px 12px;}
+  .feat-name{font-size:0.8rem;}
+  .search-wrap{max-width:170px;}
+}
+
+@media(max-width:400px){
+  .tool-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px;}
+  .search-wrap{max-width:130px;}
+  .topnav{gap:10px;padding:0 12px;}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LOADER ═══════════════════ -->
+<div id="t-loader">
+  <div class="tl-blob tl-blob-1"></div>
+  <div class="tl-blob tl-blob-2"></div>
+  <div class="tl-logo">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="10" width="48" height="34" rx="5" fill="rgba(167,139,250,0.2)" stroke="#a78bfa" stroke-width="2"/>
+      <rect x="12" y="14" width="40" height="26" rx="3" fill="#1e0060"/>
+      <circle cx="32" cy="27" r="9" fill="none" stroke="#c4b5fd" stroke-width="2.5"/>
+      <path d="M28 27 L31 30 L37 23" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="18" y="44" width="28" height="5" rx="2.5" fill="#a78bfa" opacity="0.4"/>
+      <circle cx="32" cy="54" r="4" fill="#a78bfa" opacity="0.6"/>
+    </svg>
+  </div>
+  <div class="tl-title">Study<em>Nest</em></div>
+  <div class="tl-sub">Oklahoma Teacher Hub</div>
+  <div class="tl-bar-wrap">
+    <div class="tl-bar-track"><div class="tl-bar-fill"></div></div>
+  </div>
+  <div class="tl-status" id="tl-status">Loading your classroom tools…</div>
+</div>
+
+<!-- ═══════════════════ SHORTCUTS MODAL ═══════════════════ -->
+<div class="shortcuts-overlay" id="shortcuts-overlay" onclick="if(event.target===this)closeShortcuts()">
+  <div class="shortcuts-modal">
+    <button class="sc-close" onclick="closeShortcuts()">✕</button>
+    <h3>Keyboard Shortcuts</h3>
+    <p class="sc-sub">Navigate TeacherNest faster</p>
+    <div class="sc-list">
+      <div class="sc-row"><span class="sc-desc">Focus search bar</span><div class="sc-keys"><span class="sc-key">Alt</span><span class="sc-plus">+</span><span class="sc-key">S</span></div></div>
+      <div class="sc-row"><span class="sc-desc">Open shortcuts</span><div class="sc-keys"><span class="sc-key">Alt</span><span class="sc-plus">+</span><span class="sc-key">K</span></div></div>
+      <div class="sc-row"><span class="sc-desc">Scroll to top</span><div class="sc-keys"><span class="sc-key">Alt</span><span class="sc-plus">+</span><span class="sc-key">T</span></div></div>
+      <div class="sc-row"><span class="sc-desc">Close modals</span><div class="sc-keys"><span class="sc-key">Esc</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PS MODAL ═══════════════════ -->
+<div class="ps-overlay" id="ps-overlay" onclick="if(event.target===this)closePsModal()">
+  <div class="ps-modal">
+    <div class="ps-modal-head">
+      <div class="ps-modal-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <div><h2>PowerSchool — Oklahoma</h2><p>Select your school district to log in</p></div>
+      <button class="ps-close" onclick="closePsModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="padding:0 0 12px;flex-shrink:0;position:relative;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;pointer-events:none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="ps-search" type="text" placeholder="Search your district or city…" oninput="renderPsSchools(this.value.toLowerCase())" style="width:100%;padding:9px 12px 9px 34px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:0.82rem;outline:none;color:#0f172a;background:#f8fafc;transition:border-color 0.15s;" onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#e2e8f0'">
+    </div>
+    <div class="ps-school-list" id="ps-school-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TOP NAV ═══════════════════ -->
+<nav class="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <a class="nav-brand" href="#">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
+        <rect x="4" y="5" width="24" height="17" rx="3" fill="rgba(167,139,250,0.15)" stroke="#a78bfa" stroke-width="1.5"/>
+        <rect x="6" y="7" width="20" height="13" rx="2" fill="#1e0060"/>
+        <circle cx="16" cy="13.5" r="4.5" fill="none" stroke="#c4b5fd" stroke-width="1.5"/>
+        <path d="M14 13.5 L15.5 15 L18.5 11.5" stroke="#34d399" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="9" y="22" width="14" height="2.5" rx="1.25" fill="#a78bfa" opacity="0.4"/>
+        <circle cx="16" cy="27" r="2" fill="#a78bfa" opacity="0.5"/>
+      </svg>
+    </div>
+    <span class="nav-brand-name">Study<em>Nest</em><span class="nav-brand-sub">for Teachers</span></span>
+  </a>
+
+  <span class="nav-spacer"></span>
+
+  <div class="nav-badge">🍎 Oklahoma Educator Hub</div>
+
+  <button class="bug-btn" onclick="openBugReport()" title="Report a bug">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2l1.5 1.5"/><path d="M14.5 3.5L16 2"/>
+      <path d="M9 7.5A3 3 0 0 1 15 7.5"/>
+      <path d="M6.5 11a5.5 5.5 0 0 0 11 0v-1a5.5 5.5 0 0 0-11 0v1z"/>
+      <path d="M2 9l4 1.5"/><path d="M22 9l-4 1.5"/>
+      <path d="M2 16l4-1.5"/><path d="M22 16l-4-1.5"/>
+      <path d="M12 16v5"/>
+    </svg>
+    <span>Bug</span>
+  </button>
+
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search-input" class="search-input-el" placeholder="Search tools… (Alt+S)" autocomplete="off">
+  </div>
+
+  <a class="student-link" href="index.html" title="Switch to Student site">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+    <span class="sl-text">Student Site</span>
+  </a>
+
+  <button class="dark-toggle" id="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode" aria-label="Toggle dark mode">
+    <span class="dark-toggle-thumb"></span>
+  </button>
+</nav>
+
+<!-- ═══════════════════ MOBILE BOTTOM NAV ═══════════════════ -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+  <a class="mbn-item active" onclick="goTo('fav-section');setMobileNav(this)">
+    <div class="mbn-dot"></div>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    <span class="mbn-label">Favorites</span>
+  </a>
+  <a class="mbn-item" onclick="goTo('classroom');setMobileNav(this)">
+    <div class="mbn-dot"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    <span class="mbn-label">Classroom</span>
+  </a>
+  <a class="mbn-item" onclick="goTo('assessment');setMobileNav(this)">
+    <div class="mbn-dot"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span class="mbn-label">Assessment</span>
+  </a>
+  <a class="mbn-item" onclick="goTo('planning');setMobileNav(this)">
+    <div class="mbn-dot"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="mbn-label">Planning</span>
+  </a>
+  <a class="mbn-item" onclick="toggleSidebar()">
+    <div class="mbn-dot"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <span class="mbn-label">More</span>
+  </a>
+</nav>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <!-- ═══════ SIDEBAR ═══════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section-label">Dashboard</div>
+    <a class="sidebar-item active" href="#fav-section" onclick="goTo('fav-section')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="#f43f5e"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      Favorites
+    </a>
+
+    <div class="sidebar-section-label">Classroom</div>
+    <a class="sidebar-item" href="#classroom" onclick="goTo('classroom')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Classroom Mgmt
+    </a>
+    <a class="sidebar-item" href="#communication" onclick="goTo('communication')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Communication
+    </a>
+    <a class="sidebar-item" href="#lms" onclick="goTo('lms')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      LMS &amp; Portals
+    </a>
+
+    <div class="sidebar-section-label">Teaching</div>
+    <a class="sidebar-item" href="#assessment" onclick="goTo('assessment')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Assessment Tools
+    </a>
+    <a class="sidebar-item" href="#planning" onclick="goTo('planning')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Lesson Planning
+    </a>
+    <a class="sidebar-item" href="#engagement" onclick="goTo('engagement')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01M7 12v-2M7 12v2M6 12h2M17 10h.01M20 10h.01"/></svg>
+      Student Engagement
+    </a>
+    <a class="sidebar-item" href="#video" onclick="goTo('video')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#cc0000" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="15" height="15" rx="2"/><polygon points="17 7 22 4 22 20 17 17"/></svg>
+      Video &amp; Media
+    </a>
+    <a class="sidebar-item" href="#content" onclick="goTo('content')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Content &amp; Resources
+    </a>
+    <a class="sidebar-item" href="#creative-tools" onclick="goTo('creative-tools')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r="0.5" fill="#db2777"/><circle cx="17.5" cy="10.5" r="0.5" fill="#db2777"/><circle cx="8.5" cy="7.5" r="0.5" fill="#db2777"/><circle cx="6.5" cy="12.5" r="0.5" fill="#db2777"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.47-1.125-.28-.282-.44-.668-.44-1.087 0-.966.786-1.75 1.75-1.75h2.062C19.952 16.15 22 13.867 22 11.1 22 6.134 17.523 2 12 2z"/></svg>
+      Creative Tools
+    </a>
+
+    <div class="sidebar-section-label">Admin</div>
+    <a class="sidebar-item" href="#admin" onclick="goTo('admin')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Admin &amp; SIS
+    </a>
+    <a class="sidebar-item" href="#google" onclick="goTo('google')">
+      <svg class="si-icon" viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google Workspace
+    </a>
+    <a class="sidebar-item" href="#professional" onclick="goTo('professional')">
+      <svg class="si-icon" viewBox="0 0 24 24" fill="none" stroke="#1b5e20" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+      Professional Dev
+    </a>
+  </aside>
+
+  <!-- ═══════ CONTENT ═══════ -->
+  <main class="content" id="main-content">
+
+    <!-- HERO -->
+    <div class="welcome-hero scroll-reveal">
+      <div class="hero-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="6" width="40" height="28" rx="4" fill="rgba(167,139,250,0.15)" stroke="#a78bfa" stroke-width="2"/>
+          <rect x="8" y="10" width="32" height="20" rx="2" fill="#1e0060"/>
+          <circle cx="24" cy="20" r="7" fill="none" stroke="#c4b5fd" stroke-width="2"/>
+          <path d="M21 20 L23 22.5 L28 16.5" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="12" y="34" width="24" height="4" rx="2" fill="#a78bfa" opacity="0.35"/>
+          <circle cx="24" cy="42" r="3.5" fill="#a78bfa" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="hero-text">
+        <div class="hero-eyebrow">Oklahoma Teacher Hub <span style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#10b981;font-size:0.52rem;padding:2px 8px;border-radius:5px;letter-spacing:1.5px;">EDUCATOR</span></div>
+        <div class="hero-title">Welcome, <em>Educator</em></div>
+        <div class="hero-sub">Your all-in-one Oklahoma teacher dashboard — classroom management, lesson planning, assessment tools, parent communication, and professional resources. Everything you need to teach your best.</div>
+      </div>
+      <div class="hero-cta">
+        <a class="hero-enter-btn" href="#classroom" onclick="goTo('classroom')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Explore Tools
+        </a>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row scroll-reveal scroll-reveal-delay-1">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f3f0ff;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div><div class="stat-val" id="stat-classroom">—</div><div class="stat-label">Classroom Tools</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#d1fae5;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div><div class="stat-val" id="stat-assess">—</div><div class="stat-label">Assessment Apps</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef3c7;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div><div class="stat-val" id="stat-planning">—</div><div class="stat-label">Lesson Planning</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#e0f2fe;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div><div class="stat-val" id="stat-total">—</div><div class="stat-label">Total Resources</div></div>
+      </div>
+    </div>
+
+    <!-- QUICK ACCESS CHIPS -->
+    <div class="quick-chips scroll-reveal">
+      <a class="quick-chip" href="" onclick="event.preventDefault();openPsModal()">
+        <img src="https://www.google.com/s2/favicons?domain=powerschool.com&sz=64" alt="PS">PowerSchool
+      </a>
+      <a class="quick-chip" href="https://classroom.google.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=classroom.google.com&sz=64" alt="GC">Google Classroom
+      </a>
+      <a class="quick-chip" href="https://www.schoology.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=schoology.com&sz=64" alt="SG">Schoology
+      </a>
+      <a class="quick-chip" href="https://kahoot.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=kahoot.com&sz=64" alt="KH">Kahoot!
+      </a>
+      <a class="quick-chip" href="https://nearpod.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=nearpod.com&sz=64" alt="NP">Nearpod
+      </a>
+      <a class="quick-chip" href="https://www.teacherspayteachers.com" target="_blank" rel="noopener">
+        <img src="https://www.google.com/s2/favicons?domain=teacherspayteachers.com&sz=64" alt="TpT">Teachers Pay Teachers
+      </a>
+    </div>
+
+    <!-- FEATURED / PINNED STRIP -->
+    <div class="featured-strip scroll-reveal" id="featured-strip"></div>
+
+    <!-- FAVORITES -->
+    <div id="fav-section" class="scroll-reveal">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Favorites</h2>
+        <div class="cat-line"></div>
+      </div>
+      <div id="fav-grid" class="tool-grid" style="background:linear-gradient(135deg,#fff9f0,#fff5e4);border:1.5px solid rgba(245,158,11,0.2);border-radius:16px;padding:16px;">
+        <span class="fav-empty" id="fav-empty">Heart any tool to pin it here!</span>
+      </div>
+    </div>
+
+    <!-- CLASSROOM MANAGEMENT -->
+    <div id="classroom" class="cat-section scroll-reveal" style="margin-top:20px;">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Classroom Management</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-classroom"></div>
+      </div>
+      <div class="tool-grid" id="grid-classroom"></div>
+    </div>
+
+    <!-- COMMUNICATION -->
+    <div id="communication" class="cat-section scroll-reveal scroll-reveal-delay-1">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Parent &amp; Student Communication</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-communication"></div>
+      </div>
+      <div class="tool-grid" id="grid-communication"></div>
+    </div>
+
+    <!-- LMS & PORTALS -->
+    <div id="lms" class="cat-section scroll-reveal">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>LMS &amp; Grade Portals</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-lms"></div>
+      </div>
+      <div class="tool-grid" id="grid-lms"></div>
+    </div>
+
+    <!-- ASSESSMENT -->
+    <div id="assessment" class="cat-section scroll-reveal scroll-reveal-delay-1">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Assessment &amp; Quizzing</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-assessment"></div>
+      </div>
+      <div class="tool-grid" id="grid-assessment"></div>
+    </div>
+
+    <!-- LESSON PLANNING -->
+    <div id="planning" class="cat-section scroll-reveal">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Lesson Planning &amp; Curriculum</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-planning"></div>
+      </div>
+      <div class="tool-grid" id="grid-planning"></div>
+    </div>
+
+    <!-- STUDENT ENGAGEMENT -->
+    <div id="engagement" class="cat-section scroll-reveal scroll-reveal-delay-1">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01M7 12v-2M7 12v2M6 12h2M17 10h.01M20 10h.01"/></svg>Student Engagement &amp; Games</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-engagement"></div>
+      </div>
+      <div class="tool-grid" id="grid-engagement"></div>
+    </div>
+
+    <!-- VIDEO & MEDIA -->
+    <div id="video" class="cat-section scroll-reveal">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#cc0000" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="15" height="15" rx="2"/><polygon points="17 7 22 4 22 20 17 17"/></svg>Video &amp; Media</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-video"></div>
+      </div>
+      <div class="tool-grid" id="grid-video"></div>
+    </div>
+
+    <!-- CONTENT & RESOURCES -->
+    <div id="content" class="cat-section scroll-reveal scroll-reveal-delay-1">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Content &amp; Free Resources</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-content"></div>
+      </div>
+      <div class="tool-grid" id="grid-content"></div>
+    </div>
+
+    <!-- CREATIVE TOOLS -->
+    <div id="creative-tools" class="cat-section scroll-reveal">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r="0.5" fill="#db2777"/><circle cx="17.5" cy="10.5" r="0.5" fill="#db2777"/><circle cx="8.5" cy="7.5" r="0.5" fill="#db2777"/><circle cx="6.5" cy="12.5" r="0.5" fill="#db2777"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.47-1.125-.28-.282-.44-.668-.44-1.087 0-.966.786-1.75 1.75-1.75h2.062C19.952 16.15 22 13.867 22 11.1 22 6.134 17.523 2 12 2z"/></svg>Creative &amp; Presentation</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-creative-tools"></div>
+      </div>
+      <div class="tool-grid" id="grid-creative-tools"></div>
+    </div>
+
+    <!-- ADMIN & SIS -->
+    <div id="admin" class="cat-section scroll-reveal scroll-reveal-delay-1">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Admin, SIS &amp; Compliance</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-admin"></div>
+      </div>
+      <div class="tool-grid" id="grid-admin"></div>
+    </div>
+
+    <!-- GOOGLE WORKSPACE -->
+    <div id="google" class="cat-section scroll-reveal">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google Workspace for Education</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-google"></div>
+      </div>
+      <div class="tool-grid" id="grid-google"></div>
+    </div>
+
+    <!-- PROFESSIONAL DEV -->
+    <div id="professional" class="cat-section scroll-reveal scroll-reveal-delay-1">
+      <div class="cat-head">
+        <h2><svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#1b5e20" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>Professional Development</h2>
+        <div class="cat-line"></div>
+        <div class="cat-count" id="count-professional"></div>
+      </div>
+      <div class="tool-grid" id="grid-professional"></div>
+    </div>
+
+    <div class="site-footer">StudyNest for Teachers — Oklahoma Educator Hub · <a href="index.html">🎒 Student Site →</a></div>
+  </main>
+</div>
+
+<button class="scroll-top" id="scroll-top" onclick="scrollToTop()" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- Bug Report Modal -->
+<div class="bug-overlay" id="bug-overlay" onclick="if(event.target===this)closeBugReport()">
+  <div class="bug-modal">
+    <div class="bug-modal-head">
+      <div class="bug-modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 2l1.5 1.5"/><path d="M14.5 3.5L16 2"/>
+          <path d="M9 7.5A3 3 0 0 1 15 7.5"/>
+          <path d="M6.5 11a5.5 5.5 0 0 0 11 0v-1a5.5 5.5 0 0 0-11 0v1z"/>
+          <path d="M2 9l4 1.5"/><path d="M22 9l-4 1.5"/>
+          <path d="M2 16l4-1.5"/><path d="M22 16l-4-1.5"/>
+          <path d="M12 16v5"/>
+        </svg>
+      </div>
+      <div>
+        <div class="bug-modal-title">Report a Bug</div>
+        <div class="bug-modal-sub">Found something broken? Let us know and we'll fix it!</div>
+      </div>
+      <button class="bug-modal-close" onclick="closeBugReport()">✕</button>
+    </div>
+    <div class="bug-modal-body">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSean1V6tsG4A1umviy7HPHiyxDz2R9VJhg2gdDOGyQ2YQxB8A/viewform?embedded=true" width="640" height="960" frameborder="0" marginheight="0" marginwidth="0" title="Bug Report Form" loading="lazy">Loading…</iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Banner -->
+<div class="cookie-bar" id="cookie-bar">
+  <div class="cookie-inner">
+    <div class="cookie-left">
+      <div class="cookie-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🍪</div>
+      <div class="cookie-text">
+        <div class="cookie-title">We use cookies <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#c4b5fd;font-size:0.52rem;padding:2px 8px;border-radius:5px;letter-spacing:1.5px;font-weight:800;">PRIVACY FIRST</span></div>
+        <div class="cookie-desc">StudyNest saves your favorites and preferences locally on your device — no tracking, no ads, no data sharing.</div>
+      </div>
+    </div>
+    <div class="cookie-actions">
+      <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Reject</button>
+      <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// GOOGLE SVG ICONS
+// ═══════════════════════════════════
+const GSVG = {
+  gdocs:      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#2196F3" d="M37 45H11a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h19l9 9v31a2 2 0 0 1-2 2z"/><path fill="#BBDEFB" d="M30 3l9 9h-9z"/><path fill="white" d="M15 23h18v2H15zm0 4h18v2H15zm0 4h12v2H15zm0-12h18v2H15z"/></svg>`,
+  gslides:    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FF8F00" d="M37 45H11a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h19l9 9v31a2 2 0 0 1-2 2z"/><path fill="#FFE082" d="M30 3l9 9h-9z"/><rect fill="white" x="15" y="19" width="18" height="12" rx="1"/><path fill="#FF8F00" d="M22 22l5 3-5 3z"/></svg>`,
+  gsheets:    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#43A047" d="M37 45H11a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h19l9 9v31a2 2 0 0 1-2 2z"/><path fill="#C8E6C9" d="M30 3l9 9h-9z"/><path fill="white" d="M15 20h18v2H15zm0 5h8v2h-8zm0 5h8v2h-8zm10-5h8v2h-8zm0 5h8v2h-8z"/></svg>`,
+  gdrive:     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFA000" d="M6 40l6-10h28l-6 10z"/><path fill="#1565C0" d="M6 40l12-20 8 14H10z"/><path fill="#43A047" d="M42 40H22L34 18l8 14z"/><path fill="#FFCA28" d="M22 20L14 8h14l6 10z" opacity=".5"/></svg>`,
+  gclassroom: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle fill="#43A047" cx="24" cy="24" r="21"/><rect fill="white" x="10" y="13" width="28" height="19" rx="2"/><rect fill="#43A047" x="13" y="16" width="22" height="13" rx="1"/><rect fill="white" x="17" y="34" width="14" height="2.5" rx="1"/><circle fill="white" cx="24" cy="37" r="2.5"/></svg>`,
+  gmail:      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#F44336" d="M6 14v22a2 2 0 0 0 2 2h4V18l12 8 12-8v20h4a2 2 0 0 0 2-2V14l-18 12z"/><path fill="#FF8A80" d="M6 14l18 12 18-12H6z"/></svg>`,
+  gcalendar:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="white" x="5" y="8" width="38" height="36" rx="3"/><rect fill="#1A73E8" x="5" y="8" width="38" height="12" rx="3"/><rect fill="#1A73E8" x="5" y="16" width="38" height="4"/><circle fill="#F44336" cx="16" cy="11.5" r="3"/><circle fill="#F44336" cx="32" cy="11.5" r="3"/><rect fill="#1A73E8" x="14" y="7" width="4" height="9" rx="2"/><rect fill="#1A73E8" x="30" y="7" width="4" height="9" rx="2"/><text fill="#1A73E8" x="24" y="35" text-anchor="middle" font-size="13" font-family="sans-serif" font-weight="bold">17</text></svg>`,
+  gforms:     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#7E57C2" d="M37 45H11a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h19l9 9v31a2 2 0 0 1-2 2z"/><path fill="#D1C4E9" d="M30 3l9 9h-9z"/><circle fill="white" cx="18" cy="21" r="2"/><circle fill="white" cx="18" cy="28" r="2"/><circle fill="white" cx="18" cy="35" r="2"/><rect fill="white" x="23" y="20" width="10" height="2" rx="1"/><rect fill="white" x="23" y="27" width="10" height="2" rx="1"/><rect fill="white" x="23" y="34" width="10" height="2" rx="1"/></svg>`,
+  gmeet:      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="#00897B" x="4" y="12" width="26" height="24" rx="4"/><path fill="#00BFA5" d="M32 20l10-6v20l-10-6z"/></svg>`,
+  gsites:     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="#1A73E8" x="4" y="6" width="40" height="36" rx="3"/><rect fill="white" x="8" y="10" width="32" height="22"/><rect fill="#1A73E8" x="8" y="10" width="32" height="6"/></svg>`,
+  gkeep:      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="#FBBC04" x="6" y="4" width="36" height="40" rx="4"/><rect fill="white" x="12" y="10" width="24" height="3" rx="1.5"/><rect fill="rgba(255,255,255,.7)" x="12" y="16" width="20" height="2" rx="1"/><rect fill="rgba(255,255,255,.7)" x="12" y="21" width="22" height="2" rx="1"/></svg>`,
+  gcolab:     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="#F9AB00" x="4" y="4" width="40" height="40" rx="8"/><path fill="white" d="M13 24a11 11 0 0 1 11-11v5a6 6 0 0 0 0 12v5a11 11 0 0 1-11-11z"/></svg>`,
+};
+
+function getSvgDataUri(k) {
+  var s = GSVG[k]; if(!s) return null;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+}
+
+// ═══════════════════════════════════
+// TOOL DATA
+// ═══════════════════════════════════
+const TOOLS = {
+  classroom: [
+    { name:'Google Classroom', domain:'classroom.google.com', bg:'#1e8e3e', url:'https://classroom.google.com', desc:'Assign, grade, communicate' },
+    { name:'Seesaw',           domain:'web.seesaw.me',        bg:'#f05a28', url:'https://web.seesaw.me',        desc:'Student digital portfolios' },
+    { name:'ClassDojo',        domain:'classdojo.com',        bg:'#2dc653', url:'https://www.classdojo.com',    desc:'Behavior & parent connect' },
+    { name:'Minga',            domain:'minga.io',             bg:'#5c4de5', url:'https://minga.io',             desc:'Hall passes & ID management' },
+    { name:'securlyPass',      domain:'securly.com',          bg:'#f05a18', url:'https://pass.securly.com/login', desc:'Digital hall passes' },
+    { name:'Padlet',           domain:'padlet.com',           bg:'#ff6b6b', url:'https://padlet.com',           desc:'Digital bulletin boards' },
+    { name:'Flipgrid / Flip',  domain:'flip.com',             bg:'#f72585', url:'https://flip.com',             desc:'Video discussion boards' },
+    { name:'Wakelet',          domain:'wakelet.com',          bg:'#003087', url:'https://wakelet.com',          desc:'Curate & share content' },
+    { name:'Screencastify',    domain:'screencastify.com',    bg:'#ff6b35', url:'https://www.screencastify.com',desc:'Record & share screen' },
+    { name:'Loom',             domain:'loom.com',             bg:'#625df5', url:'https://www.loom.com',         desc:'Async video messaging' },
+    { name:'Google Meet',      domain:'meet.google.com',      bg:'#00897b', url:'https://meet.google.com',      desc:'Live video meetings' },
+    { name:'Pear Deck',        domain:'peardeck.com',         bg:'#3cb878', url:'https://www.peardeck.com',     desc:'Interactive slide decks' },
+    { name:'Nearpod',          domain:'nearpod.com',          bg:'#f05a28', url:'https://nearpod.com',          desc:'Interactive lessons' },
+  ],
+  communication: [
+    { name:'Remind',           domain:'remind.com',           bg:'#0057b8', url:'https://www.remind.com',       desc:'Safe school messaging' },
+    { name:'ParentSquare',     domain:'parentsquare.com',     bg:'#0075c9', url:'https://www.parentsquare.com', desc:'School-home communication' },
+    { name:'Bloomz',           domain:'bloomz.com',           bg:'#ff6b35', url:'https://www.bloomz.com',       desc:'Parent engagement platform' },
+    { name:'Gmail',            domain:'mail.google.com',      bg:'#ea4335', url:'https://mail.google.com',      desc:'School email' },
+    { name:'Google Chat',      domain:'chat.google.com',      bg:'#1a73e8', url:'https://chat.google.com',      desc:'Team messaging' },
+    { name:'ClassDojo',        domain:'classdojo.com',        bg:'#2dc653', url:'https://www.classdojo.com',    desc:'Parent-teacher updates' },
+    { name:'Talking Points',   domain:'talkingpts.org',       bg:'#1565c0', url:'https://talkingpts.org',        desc:'Multilingual parent messaging' },
+    { name:'Peachjar',         domain:'peachjar.com',         bg:'#ff5722', url:'https://www.peachjar.com',     desc:'Digital school flyers' },
+  ],
+  lms: [
+    { name:'Schoology',        domain:'schoology.com',        bg:'#1a73e8', url:'https://www.schoology.com',    desc:'Full LMS platform' },
+    { name:'Canvas LMS',       domain:'canvas.instructure.com',bg:'#e66000',url:'https://canvas.instructure.com',desc:'Course management' },
+    { name:'Blackboard',       domain:'blackboard.com',       bg:'#cc0000', url:'https://www.blackboard.com',   desc:'Enterprise LMS' },
+    { name:'PowerSchool',      domain:'powerschool.com',      bg:'#c0392b', url:'',   special:'powerschool',   desc:'Grades & SIS portal' },
+    { name:'Infinite Campus',  domain:'infinitecampus.com',   bg:'#0f4880', url:'https://www.infinitecampus.com/login', desc:'Student info system' },
+    { name:'Clever',           domain:'clever.com',           bg:'#1565c0', url:'https://clever.com/in/school', desc:'Single sign-on for schools' },
+    { name:'Alma',             domain:'getalma.com',          bg:'#3b5998', url:'https://www.getalma.com',      desc:'Modern SIS platform' },
+    { name:'Skyward',          domain:'skyward.com',          bg:'#005a9c', url:'https://www.skyward.com/login',desc:'Student management' },
+  ],
+  assessment: [
+    { name:'Kahoot!',          domain:'kahoot.com',           bg:'#46178f', url:'https://kahoot.com',           desc:'Live quiz games' },
+    { name:'Quizizz',          domain:'quizizz.com',          bg:'#8854d0', url:'https://quizizz.com',          desc:'Async gamified quizzes' },
+    { name:'Blooket',          domain:'blooket.com',          bg:'#2faee0', url:'https://www.blooket.com',      desc:'Quiz game modes' },
+    { name:'Gimkit',           domain:'gimkit.com',           bg:'#f7c948', url:'https://www.gimkit.com',       desc:'Kit-based quizzing' },
+    { name:'Edulastic',        domain:'edulastic.com',        bg:'#1cb0f6', url:'https://edulastic.com',        desc:'Standards-aligned tests' },
+    { name:'Google Forms',     domain:'forms.google.com',     bg:'#7e57c2', url:'https://forms.google.com',     desc:'Surveys & quizzes' },
+    { name:'Formative',        domain:'goformative.com',      bg:'#ff5252', url:'https://goformative.com',      desc:'Real-time assessment' },
+    { name:'Quizlet Teacher',  domain:'quizlet.com',          bg:'#4257b2', url:'https://quizlet.com/teacher',  desc:'Create & assign study sets' },
+    { name:'Baamboozle',       domain:'baamboozle.com',       bg:'#ff6b35', url:'https://www.baamboozle.com',   desc:'Team quiz games' },
+    { name:'Quizalize',        domain:'quizalize.com',        bg:'#ff5722', url:'https://quizalize.com',        desc:'Curriculum-aligned quizzes' },
+    { name:'OK Practice Tests',domain:'okpracticetest.cognia.org',bg:'#0077b6',url:'https://okpracticetest.cognia.org', desc:'OSTP practice (Cognia)' },
+    { name:'IXL',              domain:'ixl.com',              bg:'#ff6a00', url:'https://www.ixl.com',          desc:'Adaptive skill practice' },
+    { name:'Mastery Connect',  domain:'masteryconnect.com',   bg:'#0066cc', url:'https://www.masteryconnect.com',desc:'Standards mastery tracking' },
+    { name:'Renaissance',      domain:'renaissance.com',      bg:'#1b5e20', url:'https://login.renaissance.com/',desc:'STAR assessments' },
+  ],
+  planning: [
+    { name:'Teachers Pay Teachers',domain:'teacherspayteachers.com',bg:'#4caf50',url:'https://www.teacherspayteachers.com',desc:'Lesson plans & resources' },
+    { name:'Share My Lesson',  domain:'sharemylesson.com',    bg:'#0066cc', url:'https://sharemylesson.com',     desc:'Free AFT-curated lessons' },
+    { name:'Twinkl',           domain:'twinkl.com',           bg:'#673ab7', url:'https://www.twinkl.com',       desc:'Printables & activities' },
+    { name:'ReadWriteThink',   domain:'readwritethink.org',   bg:'#1976d2', url:'https://www.readwritethink.org',desc:'Literacy lesson plans' },
+    { name:'CommonLit',        domain:'commonlit.org',        bg:'#0066cc', url:'https://www.commonlit.org',    desc:'Free ELA curriculum' },
+    { name:'Curriculum Corner',domain:'thecurriculumcorner.com',bg:'#e91e63',url:'https://www.thecurriculumcorner.com',desc:'Free K-3 resources' },
+    { name:'Khan Academy',     domain:'khanacademy.org',      bg:'#14a800', url:'https://www.khanacademy.org',  desc:'Full curriculum K-12' },
+    { name:'CK-12',            domain:'ck12.org',             bg:'#c0392b', url:'https://www.ck12.org',         desc:'Adaptive textbooks' },
+    { name:'Discovery Edu',    domain:'discoveryeducation.com',bg:'#003087',url:'https://www.discoveryeducation.com',desc:'Digital curriculum' },
+    { name:'PBS Learning',     domain:'pbslearningmedia.org', bg:'#1565c0', url:'https://pbslearningmedia.org', desc:'Standards-aligned media' },
+    { name:'BrainPOP',         domain:'brainpop.com',         bg:'#00a6e0', url:'https://www.brainpop.com',     desc:'Animated educational content' },
+    { name:'Newsela',          domain:'newsela.com',          bg:'#0077c8', url:'https://newsela.com',          desc:'Leveled news articles' },
+    { name:'Google Calendar',  domain:'calendar.google.com',  bg:'#1a73e8', url:'https://calendar.google.com',  desc:'Schedule lessons & events' },
+    { name:'Planbook',         domain:'planbook.com',         bg:'#e53935', url:'https://planbook.com',         desc:'Digital lesson planner' },
+  ],
+  engagement: [
+    { name:'Kahoot!',          domain:'kahoot.com',           bg:'#46178f', url:'https://kahoot.com',           desc:'Live game-based learning' },
+    { name:'Blooket',          domain:'blooket.com',          bg:'#2faee0', url:'https://www.blooket.com',      desc:'Customizable game modes' },
+    { name:'Gimkit',           domain:'gimkit.com',           bg:'#f7c948', url:'https://www.gimkit.com',       desc:'Earn-and-learn kit games' },
+    { name:'Quizizz',          domain:'quizizz.com',          bg:'#8854d0', url:'https://quizizz.com',          desc:'Meme-powered quizzes' },
+    { name:'Flippity',         domain:'flippity.net',         bg:'#1565c0', url:'https://www.flippity.net',     desc:'Games from Google Sheets' },
+    { name:'Prodigy Math',     domain:'prodigygame.com',      bg:'#7b2d8b', url:'https://www.prodigygame.com',  desc:'Math RPG for students' },
+    { name:'Flocabulary',      domain:'flocabulary.com',      bg:'#ff4500', url:'https://www.flocabulary.com',  desc:'Hip-hop educational videos' },
+    { name:'Epic! Books',      domain:'getepic.com',          bg:'#00b4d8', url:'https://www.getepic.com',      desc:'Digital reading library' },
+    { name:'Boddle',           domain:'boddlelearning.com',   bg:'#ff6b35', url:'https://www.boddlelearning.com',desc:'Math game platform' },
+    { name:'iCivics',          domain:'icivics.org',          bg:'#b22222', url:'https://www.icivics.org',      desc:'Civics games & simulations' },
+    { name:'99math',           domain:'99math.com',           bg:'#1b998b', url:'https://99math.com',           desc:'Multiplayer math battles' },
+    { name:'Minecraft Edu',    domain:'education.minecraft.net',bg:'#5c8a00',url:'https://education.minecraft.net',desc:'Creative learning worlds' },
+  ],
+  video: [
+    { name:'YouTube Edu',      domain:'youtube.com',          bg:'#cc0000', url:'https://www.youtube.com/education', desc:'Educational video hub' },
+    { name:'YouTube Studio',   domain:'studio.youtube.com',   bg:'#202124', url:'https://studio.youtube.com',  desc:'Manage your videos' },
+    { name:'CrashCourse',      domain:'thecrashcourse.com',   bg:'#212121', url:'https://thecrashcourse.com',   desc:'Fast-paced subject overviews' },
+    { name:'TED-Ed',           domain:'ed.ted.com',           bg:'#e62b1e', url:'https://ed.ted.com',           desc:'Animated lesson videos' },
+    { name:'PBS Learning',     domain:'pbslearningmedia.org', bg:'#1565c0', url:'https://pbslearningmedia.org', desc:'Standards-aligned clips' },
+    { name:'National Geo',     domain:'nationalgeographic.com',bg:'#f9a825',url:'https://www.nationalgeographic.com',desc:'Science & geography' },
+    { name:'Smithsonian',      domain:'smithsonianmag.com',   bg:'#b5451b', url:'https://www.smithsonianmag.com/video',desc:'Museum video content' },
+    { name:'Loom',             domain:'loom.com',             bg:'#625df5', url:'https://www.loom.com',         desc:'Record async video lessons' },
+    { name:'Screencastify',    domain:'screencastify.com',    bg:'#ff6b35', url:'https://www.screencastify.com',desc:'Screen record & share' },
+    { name:'Discovery Edu',    domain:'discoveryeducation.com',bg:'#003087',url:'https://www.discoveryeducation.com',desc:'Streaming video library' },
+  ],
+  content: [
+    { name:'Britannica',       domain:'britannica.com',       bg:'#003087', url:'https://www.britannica.com',   desc:'Encyclopedia & articles' },
+    { name:'Science News',     domain:'sciencenews.org',      bg:'#e63946', url:'https://www.sciencenews.org',  desc:'Current science articles' },
+    { name:'NOAA',             domain:'noaa.gov',             bg:'#006daa', url:'https://www.noaa.gov',         desc:'Weather & ocean science' },
+    { name:'NASA',             domain:'nasa.gov',             bg:'#0b3d91', url:'https://www.nasa.gov',         desc:'Space science resources' },
+    { name:'PhET Simulations', domain:'phet.colorado.edu',    bg:'#00558a', url:'https://phet.colorado.edu',    desc:'Interactive STEM sims' },
+    { name:'HowStuffWorks',    domain:'howstuffworks.com',    bg:'#ff6900', url:'https://www.howstuffworks.com',desc:'Explainer articles' },
+    { name:'GeoGebra',         domain:'geogebra.org',         bg:'#7b1fa2', url:'https://www.geogebra.org',     desc:'Math visualization tools' },
+    { name:'Wolfram Alpha',    domain:'wolframalpha.com',     bg:'#dd1100', url:'https://www.wolframalpha.com', desc:'Computational knowledge' },
+    { name:'Desmos',           domain:'desmos.com',           bg:'#007f7f', url:'https://www.desmos.com',       desc:'Graphing calculator' },
+    { name:'Newsela',          domain:'newsela.com',          bg:'#0077c8', url:'https://newsela.com',          desc:'Differentiated news articles' },
+    { name:'Google Scholar',   domain:'scholar.google.com',   bg:'#4285f4', url:'https://scholar.google.com',   desc:'Academic search engine' },
+    { name:'Visible Body',     domain:'visiblebody.com',      bg:'#c0392b', url:'https://www.visiblebody.com',  desc:'3D anatomy visuals' },
+  ],
+  'creative-tools': [
+    { name:'Canva for Edu',    domain:'canva.com',            bg:'#00c4cc', url:'https://www.canva.com/education/',desc:'Design for classrooms' },
+    { name:'Google Slides',    domain:'slides.google.com',    bg:'#ff8f00', url:'https://slides.google.com',    desc:'Presentation creation' },
+    { name:'Google Drawings',  domain:'docs.google.com',      bg:'#4285f4', url:'https://docs.google.com/drawings',desc:'Diagrams & visuals' },
+    { name:'Adobe Express',    domain:'adobe.com',            bg:'#ff0000', url:'https://www.adobe.com/express',desc:'Quick visual content' },
+    { name:'Piktochart',       domain:'piktochart.com',       bg:'#00b789', url:'https://piktochart.com',       desc:'Infographics & reports' },
+    { name:'Animaker',         domain:'animaker.com',         bg:'#fc4a1a', url:'https://www.animaker.com',     desc:'Animated videos & GIFs' },
+    { name:'Loom',             domain:'loom.com',             bg:'#625df5', url:'https://www.loom.com',         desc:'Quick video creation' },
+    { name:'Chrome Music Lab', domain:'musiclab.chromeexperiments.com',bg:'#4285f4',url:'https://musiclab.chromeexperiments.com',desc:'Interactive music tools' },
+    { name:'AutoDraw',         domain:'autodraw.com',         bg:'#4285f4', url:'https://www.autodraw.com',     desc:'AI-powered drawing' },
+    { name:'Flat.io',          domain:'flat.io',              bg:'#f72585', url:'https://flat.io',              desc:'Music notation editor' },
+    { name:'Unsplash',         domain:'unsplash.com',         bg:'#111111', url:'https://unsplash.com',         desc:'Free high-res photos' },
+  ],
+  admin: [
+    { name:'PowerSchool',      domain:'powerschool.com',      bg:'#c0392b', url:'',  special:'powerschool',    desc:'Grades & SIS (click to pick district)' },
+    { name:'Infinite Campus',  domain:'infinitecampus.com',   bg:'#0f4880', url:'https://www.infinitecampus.com/login',desc:'Student info system' },
+    { name:'Frontline Edu',    domain:'frontlineeducation.com',bg:'#1b4f72',url:'https://www.frontlineeducation.com',desc:'HR & substitute mgmt' },
+    { name:'Skyward',          domain:'skyward.com',          bg:'#005a9c', url:'https://www.skyward.com/login',desc:'Finance & SIS' },
+    { name:'Alma',             domain:'getalma.com',          bg:'#3b5998', url:'https://www.getalma.com',     desc:'Modern grade book SIS' },
+    { name:'Blackboard',       domain:'blackboard.com',       bg:'#cc0000', url:'https://www.blackboard.com',  desc:'Enterprise LMS & admin' },
+    { name:'LinkIt!',          domain:'linkit.com',           bg:'#2563eb', url:'https://www.linkit.com',      desc:'Assessment data platform' },
+    { name:'OSDE Portal',      domain:'sde.ok.gov',           bg:'#003087', url:'https://sde.ok.gov',          desc:'Oklahoma State Dept. of Ed.' },
+    { name:'Wayground',        domain:'wayground.com',        bg:'#1d4ed8', url:'https://wayground.com',       desc:'Digital learning management' },
+  ],
+  google: [
+    { name:'Google Classroom', svgKey:'gclassroom', domain:'classroom.google.com', url:'https://classroom.google.com', desc:'Assign & grade' },
+    { name:'Gmail',            svgKey:'gmail',      domain:'mail.google.com',      url:'https://mail.google.com',      desc:'School email' },
+    { name:'Google Docs',      svgKey:'gdocs',      domain:'docs.google.com',      url:'https://docs.google.com',      desc:'Word processing' },
+    { name:'Google Slides',    svgKey:'gslides',    domain:'slides.google.com',    url:'https://slides.google.com',    desc:'Presentations' },
+    { name:'Google Sheets',    svgKey:'gsheets',    domain:'sheets.google.com',    url:'https://sheets.google.com',    desc:'Spreadsheets & grade books' },
+    { name:'Google Drive',     svgKey:'gdrive',     domain:'drive.google.com',     url:'https://drive.google.com',     desc:'Cloud file storage' },
+    { name:'Google Forms',     svgKey:'gforms',     domain:'forms.google.com',     url:'https://forms.google.com',     desc:'Quizzes & surveys' },
+    { name:'Google Meet',      svgKey:'gmeet',      domain:'meet.google.com',      url:'https://meet.google.com',      desc:'Video conferencing' },
+    { name:'Google Calendar',  svgKey:'gcalendar',  domain:'calendar.google.com',  url:'https://calendar.google.com',  desc:'Schedule management' },
+    { name:'Google Sites',     svgKey:'gsites',     domain:'sites.google.com',     url:'https://sites.google.com',     desc:'Class websites' },
+    { name:'Google Keep',      svgKey:'gkeep',      domain:'keep.google.com',      url:'https://keep.google.com',      desc:'Notes & to-do lists' },
+    { name:'Google Colab',     svgKey:'gcolab',     domain:'colab.research.google.com',url:'https://colab.research.google.com',desc:'Python notebooks' },
+  ],
+  professional: [
+    { name:'Google for Edu',   domain:'edu.google.com',       bg:'#4285f4', url:'https://edu.google.com',       desc:'Google educator training' },
+    { name:'Khan Academy',     domain:'khanacademy.org',      bg:'#14a800', url:'https://www.khanacademy.org',  desc:'Teacher resources & PD' },
+    { name:'ISTE',             domain:'iste.org',             bg:'#003087', url:'https://www.iste.org',         desc:'Ed tech standards & PD' },
+    { name:'Edutopia',         domain:'edutopia.org',         bg:'#1c7b3a', url:'https://www.edutopia.org',     desc:'Teaching strategies & ideas' },
+    { name:'Teaching Channel', domain:'teachingchannel.com',  bg:'#e53935', url:'https://www.teachingchannel.com',desc:'Video PD library' },
+    { name:'Coursera',         domain:'coursera.org',         bg:'#0056d2', url:'https://www.coursera.org',     desc:'Online certification courses' },
+    { name:'CTLE Tracker',     domain:'frontlineeducation.com',bg:'#1b4f72',url:'https://www.frontlineeducation.com',desc:'Track professional hours' },
+    { name:'Newsela Pro',      domain:'newsela.com',          bg:'#0077c8', url:'https://newsela.com',          desc:'Teacher PD & curriculum' },
+    { name:'OSDE Certification',domain:'sde.ok.gov',          bg:'#003087', url:'https://sde.ok.gov/certification',desc:'OK teacher certification' },
+    { name:'Microsoft Learn',  domain:'learn.microsoft.com',  bg:'#0078d4', url:'https://learn.microsoft.com',  desc:'Free tech skill courses' },
+  ],
+};
+
+const FEATURED = [
+  { name:'Nearpod', domain:'nearpod.com', bg:'#f05a28', url:'https://nearpod.com', desc:'Live interactive lessons your students will love' },
+  { name:'Pear Deck', domain:'peardeck.com', bg:'#3cb878', url:'https://www.peardeck.com', desc:'Slides that respond to every student in real time' },
+  { name:'Edulastic', domain:'edulastic.com', bg:'#1cb0f6', url:'https://edulastic.com', desc:'Standards-aligned formative assessments built fast' },
+  { name:'Teachers Pay Teachers', domain:'teacherspayteachers.com', bg:'#4caf50', url:'https://www.teacherspayteachers.com', desc:'Millions of lesson plans from real educators' },
+  { name:'Flocabulary', domain:'flocabulary.com', bg:'#ff4500', url:'https://www.flocabulary.com', desc:'Hip-hop videos that make vocabulary stick' },
+  { name:'Screencastify', domain:'screencastify.com', bg:'#ff6b35', url:'https://www.screencastify.com', desc:'Record screen tutorials your students can replay' },
+];
+
+const PS_SCHOOLS = [
+  { name:'Yukon Public Schools',           desc:'Yukon, OK · PowerSchool',           url:'https://yukonps.powerschool.com/public/home.html' },
+  { name:'Mustang Public Schools',         desc:'Mustang, OK · PowerSchool',         url:'https://ps.mustangps.org/public/home.html' },
+  { name:'Putnam City Schools',            desc:'NW OKC, OK · PowerSchool',          url:'https://powerschool.putnamcityschools.org/public/home.html' },
+  { name:'Tulsa Public Schools',           desc:'Tulsa, OK · PowerSchool',           url:'https://powerschool.tulsaschools.org/public/home.html' },
+  { name:'Jenks Public Schools',           desc:'Jenks, OK · PowerSchool',           url:'https://powerschool.jenksps.org/public/home.html' },
+  { name:'Owasso Public Schools',          desc:'Owasso, OK · PowerSchool',          url:'https://owasso.powerschool.com/public/home.html' },
+  { name:'Bixby Public Schools',           desc:'Bixby, OK · PowerSchool',           url:'https://bixby.powerschool.com/public/home.html' },
+  { name:'Sapulpa Public Schools',         desc:'Sapulpa, OK · PowerSchool',         url:'https://sapulpa.powerschool.com/public/home.html' },
+  { name:'Sand Springs Public Schools',    desc:'Sand Springs, OK · PowerSchool',    url:'https://sandsprings.powerschool.com/public/home.html' },
+  { name:'Claremore Public Schools',       desc:'Claremore, OK · PowerSchool',       url:'https://claremore.powerschool.com/public/home.html' },
+  { name:'Stillwater Public Schools',      desc:'Stillwater, OK · PowerSchool',      url:'https://stillwater.powerschool.com/public/home.html' },
+  { name:'Lawton Public Schools',          desc:'Lawton, OK · PowerSchool',          url:'https://lawton.powerschool.com/public/home.html' },
+  { name:'Enid Public Schools',            desc:'Enid, OK · PowerSchool',            url:'https://enid.powerschool.com/public/home.html' },
+  { name:'Bartlesville Public Schools',    desc:'Bartlesville, OK · PowerSchool',    url:'https://bartlesville.powerschool.com/public/home.html' },
+  { name:'Tahlequah Public Schools',       desc:'Tahlequah, OK · PowerSchool',       url:'https://tahlequah.powerschool.com/public/home.html' },
+  { name:'Muskogee Public Schools',        desc:'Muskogee, OK · PowerSchool',        url:'https://muskogee.powerschool.com/public/home.html' },
+  { name:'Oklahoma City Public Schools ⓘ', desc:'OKCPS uses Infinite Campus — not PowerSchool', url:'https://okcps.infinitecampus.org/campus/portal/parents/oklahoma_city.jsp' },
+  { name:'Edmond Public Schools ⓘ',        desc:'Edmond uses Infinite Campus',       url:'https://edmondschools.infinitecampus.org/campus/portal/parents/edmond.jsp' },
+  { name:'Moore Public Schools ⓘ',         desc:'Moore uses Infinite Campus',        url:'https://campus.mooreschools.com/campus/portal/parents/moore.jsp' },
+  { name:'Norman Public Schools ⓘ',        desc:'Norman uses Infinite Campus',       url:'https://normanok.infinitecampus.org/campus/portal/parents/norman.jsp' },
+  { name:'Broken Arrow Public Schools ⓘ',  desc:'Broken Arrow uses Infinite Campus', url:'https://baschools.infinitecampus.org/campus/portal/parents/brokenarrow.jsp' },
+  { name:'School not listed above',        desc:'Search district name + "PowerSchool" or "parent portal"', url:'https://www.powerschool.com/find-my-school/' },
+];
+
+// ═══════════════════════════════════
+// PERSISTENCE
+// ═══════════════════════════════════
+function getFavorites(){ try{return JSON.parse(localStorage.getItem('tn_favorites')||'[]');}catch{return[];} }
+function saveFavorites(a){ localStorage.setItem('tn_favorites',JSON.stringify(a)); }
+function fav(d){ return 'https://www.google.com/s2/favicons?domain='+d+'&sz=256'; }
+
+// ═══════════════════════════════════
+// BUILD TOOL CARD
+// ═══════════════════════════════════
+function makeCard(tool, inFavGrid) {
+  const uKey = tool.key || tool.name;
+  const a = document.createElement('a');
+  if (tool.special === 'powerschool') {
+    a.href='#'; a.addEventListener('click', e=>{ e.preventDefault(); openPsModal(); });
+  } else {
+    a.href = tool.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  }
+  a.className = 'tool-card';
+  a.dataset.name = (tool.name+' '+(tool.desc||'')).toLowerCase();
+  a.dataset.key = uKey;
+  a.title = tool.name;
+
+  // Icon
+  const iconDiv = document.createElement('div');
+  iconDiv.className = 'tool-card-icon';
+  if (tool.svgKey && GSVG[tool.svgKey]) {
+    const img = document.createElement('img');
+    img.src = getSvgDataUri(tool.svgKey);
+    img.alt = tool.name;
+    img.style.cssText = 'width:80%;height:80%;object-fit:contain;display:block;';
+    iconDiv.appendChild(img);
+  } else if (tool.domain) {
+    const img = document.createElement('img');
+    img.src = fav(tool.domain);
+    img.alt = tool.name;
+    img.onerror = () => { img.remove(); addFallback(iconDiv, tool); };
+    iconDiv.appendChild(img);
+  } else {
+    addFallback(iconDiv, tool);
+  }
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'tool-card-body';
+  const name = document.createElement('div');
+  name.className = 'tool-card-name';
+  name.textContent = tool.name;
+  const desc = document.createElement('div');
+  desc.className = 'tool-card-desc';
+  desc.textContent = tool.desc || '';
+  body.appendChild(name);
+  body.appendChild(desc);
+
+  // Arrow
+  const arrow = document.createElement('div');
+  arrow.className = 'tool-card-arrow';
+  arrow.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+
+  // Heart
+  const hBtn = document.createElement('button');
+  hBtn.className = 'card-heart'; hBtn.title = 'Add to favorites';
+  hBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+  const favs = getFavorites();
+  hBtn.classList.toggle('hearted', favs.some(f=>(f.key||f.name)===uKey));
+  hBtn.addEventListener('click', e=>{
+    e.preventDefault(); e.stopPropagation();
+    let favs = getFavorites();
+    const idx = favs.findIndex(f=>(f.key||f.name)===uKey);
+    if(idx===-1){ favs.push({...tool,key:uKey}); hBtn.classList.add('hearted'); }
+    else {
+      favs.splice(idx,1); hBtn.classList.remove('hearted');
+      if(inFavGrid){ a.remove(); checkFavEmpty(); }
+      document.querySelectorAll(`.tool-card[data-key="${uKey}"] .card-heart`).forEach(b=>b.classList.remove('hearted'));
+    }
+    saveFavorites(favs); renderFavorites();
+  });
+
+  a.appendChild(iconDiv); a.appendChild(body); a.appendChild(arrow); a.appendChild(hBtn);
+  return a;
+}
+
+function addFallback(iconDiv, tool) {
+  const l = document.createElement('span');
+  l.className = 'fallback-letter';
+  l.style.cssText = `background:${tool.bg||'#334155'};border-radius:inherit;width:100%;height:100%;display:flex;align-items:center;justify-content:center;`;
+  l.textContent = (tool.name)[0].toUpperCase();
+  iconDiv.appendChild(l);
+}
+
+function checkFavEmpty() {
+  const grid = document.getElementById('fav-grid');
+  const empty = document.getElementById('fav-empty');
+  const cards = grid.querySelectorAll('.tool-card');
+  if(empty) empty.style.display = cards.length ? 'none' : '';
+}
+
+function renderFavorites() {
+  const grid = document.getElementById('fav-grid');
+  const empty = document.getElementById('fav-empty');
+  const favs = getFavorites();
+  if(!favs.length){ if(empty) empty.style.display=''; return; }
+  if(empty) empty.style.display='none';
+  const existing = new Set([...grid.querySelectorAll('.tool-card')].map(c=>c.dataset.key));
+  favs.forEach(t=>{
+    const k=t.key||t.name;
+    if(!existing.has(k)) grid.appendChild(makeCard(t,true));
+  });
+  grid.querySelectorAll('.tool-card').forEach(c=>{
+    if(!favs.some(f=>(f.key||f.name)===c.dataset.key)) c.remove();
+  });
+  checkFavEmpty();
+}
+
+function renderSection(key, gridId, countId) {
+  const grid = document.getElementById(gridId); if(!grid) return;
+  const tools = TOOLS[key]||[];
+  tools.forEach((t,i)=>{
+    const c = makeCard(t,false);
+    c.style.animationDelay = (i*0.03)+'s';
+    grid.appendChild(c);
+  });
+  const count = document.getElementById(countId);
+  if(count) count.textContent = tools.length+' tools';
+}
+
+function renderAll() {
+  renderFavorites();
+  const sections = [
+    ['classroom','grid-classroom','count-classroom'],
+    ['communication','grid-communication','count-communication'],
+    ['lms','grid-lms','count-lms'],
+    ['assessment','grid-assessment','count-assessment'],
+    ['planning','grid-planning','count-planning'],
+    ['engagement','grid-engagement','count-engagement'],
+    ['video','grid-video','count-video'],
+    ['content','grid-content','count-content'],
+    ['creative-tools','grid-creative-tools','count-creative-tools'],
+    ['admin','grid-admin','count-admin'],
+    ['google','grid-google','count-google'],
+    ['professional','grid-professional','count-professional'],
+  ];
+  sections.forEach(([k,g,c])=>renderSection(k,g,c));
+
+  // Stats
+  const counts = {
+    classroom: TOOLS.classroom.length,
+    assessment: TOOLS.assessment.length + TOOLS.engagement.length,
+    planning: TOOLS.planning.length + TOOLS.content.length,
+    total: Object.values(TOOLS).reduce((a,b)=>a+b.length,0),
+  };
+  document.getElementById('stat-classroom').textContent = counts.classroom;
+  document.getElementById('stat-assess').textContent = counts.assessment;
+  document.getElementById('stat-planning').textContent = counts.planning;
+  document.getElementById('stat-total').textContent = counts.total;
+}
+
+// Featured strip
+function renderFeatured() {
+  const strip = document.getElementById('featured-strip'); if(!strip) return;
+  FEATURED.forEach(tool => {
+    const card = document.createElement('a');
+    card.className = 'feat-card';
+    card.href = tool.url; card.target='_blank'; card.rel='noopener noreferrer';
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'feat-icon';
+    if (tool.domain) {
+      const img = document.createElement('img');
+      img.src = fav(tool.domain); img.alt = tool.name;
+      img.onerror = () => { img.remove(); const l=document.createElement('span'); l.className='fallback-letter'; l.textContent=tool.name[0]; iconDiv.appendChild(l); };
+      iconDiv.appendChild(img);
+    }
+    const nameEl = document.createElement('div'); nameEl.className='feat-name'; nameEl.textContent=tool.name;
+    const descEl = document.createElement('div'); descEl.className='feat-desc'; descEl.textContent=tool.desc;
+    const arr = document.createElement('div'); arr.className='feat-arrow'; arr.textContent='Open Tool →';
+    card.appendChild(iconDiv); card.appendChild(nameEl); card.appendChild(descEl); card.appendChild(arr);
+    strip.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════
+document.getElementById('search-input').addEventListener('input', function(){
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.tool-card').forEach(c=>{
+    const match = !q || c.dataset.name.includes(q);
+    c.style.display = match?'':'none';
+  });
+  document.querySelectorAll('.cat-section').forEach(s=>{
+    const visible = [...s.querySelectorAll('.tool-card')].some(c=>c.style.display!=='none');
+    s.style.display = visible?'':'none';
+  });
+});
+
+// ═══════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════
+function goTo(id) {
+  const el = document.getElementById(id);
+  if(el){ document.getElementById('main-content').scrollTo({top:el.offsetTop-10,behavior:'smooth'}); }
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+  const link = document.querySelector(`.sidebar-item[href="#${id}"]`);
+  if(link) link.classList.add('active');
+  if(window.innerWidth<=900) toggleSidebar(false);
+}
+
+function toggleSidebar(force) {
+  const sb=document.getElementById('sidebar'), ov=document.getElementById('overlay');
+  const isOpen = typeof force==='boolean'?force:!sb.classList.contains('open');
+  sb.classList.toggle('open',isOpen); ov.classList.toggle('open',isOpen);
+}
+
+function setMobileNav(el) {
+  document.querySelectorAll('.mbn-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════
+// POWERSCHOOL MODAL
+// ═══════════════════════════════════
+function openPsModal(){
+  document.getElementById('ps-overlay').classList.add('open');
+  renderPsSchools('');
+  setTimeout(()=>{ const s=document.getElementById('ps-search'); if(s)s.focus(); },80);
+}
+function closePsModal(){ document.getElementById('ps-overlay').classList.remove('open'); }
+function renderPsSchools(q){
+  const list=document.getElementById('ps-school-list'); if(!list) return;
+  list.innerHTML='';
+  const filtered=q?PS_SCHOOLS.filter(s=>s.name.toLowerCase().includes(q)||s.desc.toLowerCase().includes(q)):PS_SCHOOLS;
+  filtered.forEach(s=>{
+    const a=document.createElement('a');
+    a.className='ps-school-btn'; a.href=s.url; a.target='_blank'; a.rel='noopener noreferrer';
+    a.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><div><div class="ps-school-name">${s.name}</div><div class="ps-school-desc">${s.desc}</div></div>`;
+    list.appendChild(a);
+  });
+}
+
+// ═══════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════
+function openShortcuts(){ document.getElementById('shortcuts-overlay').classList.add('open'); }
+function closeShortcuts(){ document.getElementById('shortcuts-overlay').classList.remove('open'); }
+
+// ═══════════════════════════════════
+// BUG REPORT
+// ═══════════════════════════════════
+function openBugReport(){ document.getElementById('bug-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeBugReport(){ document.getElementById('bug-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+// ═══════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════
+document.addEventListener('keydown', e=>{
+  if(e.altKey&&e.key==='s'){ e.preventDefault(); document.getElementById('search-input').focus(); }
+  if(e.altKey&&e.key==='k'){ e.preventDefault(); openShortcuts(); }
+  if(e.altKey&&e.key==='t'){ e.preventDefault(); scrollToTop(); }
+  if(e.key==='Escape'){
+    document.querySelectorAll('.shortcuts-overlay.open,.ps-overlay.open').forEach(el=>el.classList.remove('open'));
+    closeBugReport();
+    if(window.innerWidth<=900) toggleSidebar(false);
+  }
+});
+
+// ═══════════════════════════════════
+// SCROLL
+// ═══════════════════════════════════
+function scrollToTop(){ document.getElementById('main-content').scrollTo({top:0,behavior:'smooth'}); }
+document.getElementById('main-content').addEventListener('scroll', function(){
+  const btn=document.getElementById('scroll-top');
+  btn.classList.toggle('visible', this.scrollTop>300);
+  const ids=['fav-section','classroom','communication','lms','assessment','planning','engagement','video','content','creative-tools','admin','google','professional'];
+  let current='classroom';
+  ids.forEach(id=>{ const el=document.getElementById(id); if(el&&this.scrollTop>=el.offsetTop-80) current=id; });
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+  const link=document.querySelector(`.sidebar-item[href="#${current}"]`);
+  if(link) link.classList.add('active');
+});
+
+// ═══════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════
+function initReveal(){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('revealed'); });
+  },{threshold:0.05});
+  document.querySelectorAll('.scroll-reveal').forEach(el=>observer.observe(el));
+}
+
+// ═══════════════════════════════════
+// COOKIE
+// ═══════════════════════════════════
+function getCookiePref(){ return localStorage.getItem('tn_cookie_consent'); }
+function acceptCookies(){ localStorage.setItem('tn_cookie_consent','accepted'); hideCookieBar(); }
+function rejectCookies(){ localStorage.setItem('tn_cookie_consent','rejected'); hideCookieBar(); }
+function hideCookieBar(){ const bar=document.getElementById('cookie-bar'); if(bar){bar.classList.remove('visible');bar.classList.add('hiding');setTimeout(()=>bar.style.display='none',400);} }
+function initCookieBanner(){ if(getCookiePref()) return; const bar=document.getElementById('cookie-bar'); if(bar){bar.style.display='';setTimeout(()=>bar.classList.add('visible'),2800);} }
+
+// ═══════════════════════════════════
+// DARK MODE
+// ═══════════════════════════════════
+function toggleDarkMode(){ const d=document.body.classList.toggle('dark-mode'); localStorage.setItem('tn_dark_mode',d?'1':'0'); }
+function initDarkMode(){ const p=localStorage.getItem('tn_dark_mode'); const sys=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches; if(p==='1'||(p===null&&sys)) document.body.classList.add('dark-mode'); }
+
+// ═══════════════════════════════════
+// SWIPE GESTURES
+// ═══════════════════════════════════
+(function(){
+  let tx=0,ty=0,tt=0;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;tt=Date.now();},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty,dt=Date.now()-tt;
+    const vel=Math.abs(dx)/dt;
+    const sb=document.getElementById('sidebar'),isOpen=sb&&sb.classList.contains('open');
+    if(Math.abs(dx)<Math.abs(dy)*1.5) return;
+    if(vel<0.3&&Math.abs(dx)<60) return;
+    if(dx>0&&tx<30&&!isOpen) toggleSidebar(true);
+    if(dx<0&&isOpen) toggleSidebar(false);
+  },{passive:true});
+})();
+
+// ═══════════════════════════════════
+// BOOT
+// ═══════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  initDarkMode();
+  renderAll();
+  renderFeatured();
+  initReveal();
+  initCookieBanner();
+
+  // Loader status rotation
+  const msgs=['Loading your classroom tools…','Gathering educator resources…','Almost ready…','Polishing things up…'];
+  let mi=0; const statusEl=document.getElementById('tl-status');
+  const iv=setInterval(()=>{ mi=(mi+1)%msgs.length; if(statusEl) statusEl.textContent=msgs[mi]; },600);
+  setTimeout(()=>{ clearInterval(iv); document.getElementById('t-loader').classList.add('hidden'); },2100);
+});
+</script>
+</body>
+</html>
